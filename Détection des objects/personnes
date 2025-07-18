@@ -1,0 +1,36 @@
+!pip install ultralytics opencv-python-headless
+
+
+
+
+
+
+from ultralytics import YOLO
+import cv2
+import matplotlib.pyplot as plt
+
+# Charger le modèle YOLOv8 pré-entraîné (nano pour la rapidité)
+model = YOLO('yolov8n.pt')  # Tu peux utiliser 'yolov8s.pt' pour plus de précision
+
+# Uploader une image dans Colab
+from google.colab import files
+uploaded = files.upload()
+
+for filename in uploaded.keys():
+    image_path = filename
+
+# Lire l'image
+img = cv2.imread(image_path)
+img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+# Prédiction YOLO
+results = model.predict(img_rgb, conf=0.5)
+
+# Affichage avec les boxes
+result_img = results[0].plot()  # YOLO renvoie une image avec les boxes déjà dessinées
+
+plt.figure(figsize=(12,8))
+plt.imshow(result_img)
+plt.axis('off')
+plt.title('Détection d\'objets')
+plt.show()
